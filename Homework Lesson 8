@@ -1,0 +1,30 @@
+pragma solidity >0.8.2;
+
+import "hardhat/console.sol";
+
+contract Contact{
+
+    string _name;
+
+    constructor (string memory name){
+        _name = name;
+    }
+
+    function getName() public view returns (string memory name){
+        return _name;
+    }
+
+    function reply() public view returns (string memory replyname){
+        return string.concat(getName(),' on call!');
+    }
+}
+
+contract ContactBook{
+
+    address[] _contacts;
+
+    function addContact(string name){
+        address _contact
+        _contacts.push
+    }
+}
