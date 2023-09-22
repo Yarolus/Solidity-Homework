@@ -4,27 +4,38 @@ import "hardhat/console.sol";
 
 contract Contact{
 
-    string _name;
+    string public name;
+    address public wallet;
+    uint256 public age;
 
-    constructor (string memory name){
-        _name = name;
+    constructor (string memory _name, address _wallet, uint256 _age){
+        name = _name;
+        wallet = _wallet;
+        age = _age;
+
     }
 
-    function getName() public view returns (string memory name){
-        return _name;
+    function getName() public view returns (string memory _name){
+        return name;
     }
 
-    function reply() public view returns (string memory replyname){
+    function reply() public view returns (string memory _replyname){
         return string.concat(getName(),' on call!');
     }
 }
 
 contract ContactBook{
 
-    address[] _contacts;
+    string name;
+    address wallet;
+    uint256 age;
 
-    function addContact(string name){
-        address _contact
-        _contacts.push
+    address[] public _contacts;
+
+    function addContact(string memory _name, address _wallet, uint256 _age) public{
+        address _contact = address(new Contact(_name, _wallet, _age));
+        _contacts.push(_contact);
+        emit NewContact(name, wallet);
     }
+    event NewContact(string name, address wallet);
 }
