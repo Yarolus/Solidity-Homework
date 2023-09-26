@@ -1,1 +1,129 @@
+import 'hardhat/console.sol';
+pragma solidity >0.8.2;
+
+library StringComparer{
+    function compare(string memory str1, string memory str2) public pure returns(bool){
+        return keccak256(abi.encodePacked(str1)) == keccak256(abi.encodePacked(str2));
+    }
+}
+
+abstract contract Animal{
+    
+    string name;
+    string canEat;
+    bool expression;
+
+    constructor(string memory _name){
+        name = _name;
+    }
+
+    function eat(string calldata _food) virtual view public returns(string memory){
+        return "Animal eats";
+    }
+
+    function sleep() pure public returns(string memory){
+        return "Zzzzzzzzzz";
+    }
+
+    function speak() virtual view public returns(string memory){
+        return "Animal speaks";
+    }
+    modifier eatsPlant{
+        canEat = "plant";
+        _;
+    }
+    modifier eatsMeat{
+        canEat = "meat";
+        _;
+    }
+    modifier cantEatChocolate{
+        keccak256(abi.encodePacked(canEat)) != keccak256(abi.encodePacked("chocolate"));
+        _;
+    }
+}
+
+abstract contract Herbivore is Animal {
+
+
+    function eat(string calldata _food) override virtual view public returns(string memory) {
+        require(StringComparer.compare(_food,canEat),"Herbivore cannot eat this");
+        return "Nom-Nom";
+    }
+    
+}
+
+abstract contract Carnivore is Animal{
+
+    function eat(string calldata _food) override view public returns(string memory){
+        require(StringComparer.compare(_food,canEat), "Carnivore cannot eat this");
+        return "Ararararar";
+    }
+}
+
+abstract contract Omnivore is Animal{
+
+    function eat(string calldata _food) override virtual view public returns(string memory){
+        return "I will eat it";
+    }
+}
+
+contract Horse is Herbivore{
+    
+    constructor(string memory _name) Animal(_name) eatsPlant{
+    }
+
+    function speak() override pure public returns(string memory){
+        return "Ihohohoho";
+    }
+}
+
+contract Cow is Herbivore{
+
+    constructor(string memory _name) Animal(_name)eatsPlant{
+    }
+
+    function speak() override pure public returns(string memory){
+        return "Mooooooow";
+    }
+}
+
+contract Dog is Omnivore{
+
+    constructor(string memory _name) Animal(_name) cantEatChocolate{
+    }
+
+    function eat(string calldata _food) pure override public returns(string memory){
+        require(!StringComparer.compare(_food,"chocolate"),"Dogs cannot eat chocolate");
+        if(StringComparer.compare(_food,"meat") || StringComparer.compare(_food,"plant")){
+            return "Dog eats";
+        }
+        revert("Dogs cannot eat this");
+    }
+
+    function speak() override pure public returns(string memory){
+        return "Woof";
+    }
+}
+
+contract Pig is Omnivore{
+
+    constructor(string memory _name) Animal(_name){
+    }
+
+    function speak() override pure public returns(string memory){
+        return "Oink-oink";
+    }
+}
+
+contract Wolf is Carnivore{
+    constructor (string memory _name) Animal(_name)eatsMeat{
+    }
+
+    function speak() override pure public returns(string memory){
+        return "Awooooo";
+    }
+}
+
+
+
 
