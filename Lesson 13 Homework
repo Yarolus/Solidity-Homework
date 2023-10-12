@@ -48,6 +48,7 @@ function main(){
                 console.log("All done.")
             });
 }
+//частина Андрія закінчилася
 
 main();
 console.log("global in global ",_global)
